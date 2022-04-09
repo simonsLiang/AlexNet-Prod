@@ -1,4 +1,4 @@
-# AlexNet
+# Progressive Image Deraining Networks: A Better and Simpler Baseline
 
 ## 目录
 
@@ -23,35 +23,32 @@
 
 ## 1. 简介
 
-AlexNet是2012年ImageNet竞赛冠军获得者Hinton和他的学生Alex Krizhevsky设计的。主要创新点如下。
-
-* 首次引入ReLU激活函数：之前都是tanh和sigmoid激活函数，收敛慢且效果不好，用ReLU可以保证很多权重梯度不消失，且计算量更少，效果更好
-* 首次使用多个GPU并行训练：由于当时的GPU设备显存较小，AlexNet使用了两个GPU并行计算
-* 使用overlapping pooling：滑动窗口大于滑动步长，可以避免过拟合，进一步提升精度
-* 使用Dropout：该技术可以减少神经元之间的相互依赖性。因此，模型被强制学习更加稳健的特征
-
+Progressive Image Deraining Networks: A Better and Simpler Baseline该篇论文提出多阶段渐进的残差网络，每一个阶段都是resnet，每一res块的输入为上一res块输出和原始雨图，其中PReNet在残差块里引入了LSTM，进一步提升了网络的性能，网络总体简洁高效，在各种数据集上表现良好。
 
 <div align="center">
     <img src="./images/alexnet_framework.png" width=800">
 </div>
 
-**论文:** [ImageNet Classification with Deep Convolutional Neural Networks](https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf)
+**论文:** [Progressive Image Deraining Networks: A Better and Simpler Baseline](https://arxiv.org/pdf/1901.09221v3.pdf)
 
-**参考repo:** [https://github.com/pytorch/vision](https://github.com/pytorch/vision)
+**参考repo:** [https://github.com/csdwren/PReNet](https://github.com/csdwren/PReNet)
 
 
-在此感谢[vision](https://github.com/pytorch/vision)，提高了AlexNet论文复现的效率。
+在此感谢[MSSIM](https://github.com/AgentMaker/Paddle-MSSSIM)，提高了论文复现的效率。
 
 ## 2. 数据集和复现精度
 
-数据集为ImageNet，训练集包含1281167张图像，验证集包含50000张图像。
+数据集为TrainRainH,Rain100H,训练集包含 1254张图像，验证集包含100张图像。
 
-您可以从[ImageNet 官网](https://image-net.org/)申请下载数据。
+您可以从[BaiduYun](https://pan.baidu.com/s/1Oym9G-8Bq-0FU2BfbARf8g)下载数据。
 
+验收标准：Rain100H数据集,PReNet模型,psnr=29.46, ssim=0.899
+复现精度：Rain100H数据集,PReNet模型,psnr=29.46, ssim=0.899
 
-| 模型      | top1/5 acc (参考精度) | top1/5 acc (复现精度) | 下载链接 |
-|:---------:|:------:|:----------:|:----------:|
-| AlexNet | 0.565/0.791   | 0.564/0.790   | [预训练模型](https://paddle-model-ecology.bj.bcebos.com/model/alexnet_reprod/alexnet_pretrained.pdparams) \|  [Inference模型](https://paddle-model-ecology.bj.bcebos.com/model/alexnet_reprod/alexnet_infer.tar) \| [日志](https://paddle-model-ecology.bj.bcebos.com/model/alexnet_reprod/alexnet_train.log) |
+| Epoch | 30     | 50     | 70      | 90    | 100    | 
+| ----- | ------ | ------ | ------ | ------ | ------ | 
+| psnr  | 82.44% | 82.87% | 82.93% | 83.12% | 83.29% | 
+| ssim  | 82.44% | 82.87% | 82.93% | 83.12% | 83.29% | 
 
 
 ## 3. 准备环境与数据
@@ -61,8 +58,8 @@ AlexNet是2012年ImageNet竞赛冠军获得者Hinton和他的学生Alex Krizhevs
 * 下载代码
 
 ```bash
-git clone https://github.com/littletomatodonkey/AlexNet-Prod.git
-cd AlexNet-Prod/pipeline/Step5/AlexNet_paddle
+git clone https://github.com/simonsLiang/PReNet_paddle.git
+cd PReNet_paddle
 ```
 
 * 安装paddlepaddle
@@ -84,19 +81,12 @@ pip install -r requirements.txt
 ```
 
 ### 3.2 准备数据
-
-如果您已经ImageNet1k数据集，那么该步骤可以跳过，如果您没有，则可以从[ImageNet官网](https://image-net.org/download.php)申请下载。
-
-如果只是希望快速体验模型训练功能，则可以直接解压`test_images/lite_data.tar`，其中包含16张训练图像以及16张验证图像。
-
-```bash
-tar -xf test_images/lite_data.tar
-```
+                                                        
+您可以从[BaiduYun](https://pan.baidu.com/s/1Oym9G-8Bq-0FU2BfbARf8g)下载数据TrainRainH.zip,Rain100H.zip,然后解压
 
 ### 3.3 准备模型
 
-如果您希望直接体验评估或者预测推理过程，可以直接根据第2章的内容下载提供的预训练模型，直接体验模型评估、预测、推理部署等内容。
-
+预训练模型可在[BaiduYun](https://pan.baidu.com/s/1Oym9G-8Bq-0FU2BfbARf8g)下载
 
 ## 4. 开始使用
 
@@ -106,31 +96,25 @@ tar -xf test_images/lite_data.tar
 
 ```bash
 export CUDA_VISIBLE_DEVICES=0
-python3.7 train.py --data-path=./ILSVRC2012 --lr=0.00125 --batch-size=32
+python train.py --data_path=./TrainRainH --lr=0.0001 --batch-size=18
 ```
 
 部分训练日志如下所示。
 
 ```
-[Epoch 1, iter: 4780] top1: 0.10312, top5: 0.27344, lr: 0.01000, loss: 5.34719, avg_reader_cost: 0.03644 sec, avg_batch_cost: 0.05536 sec, avg_samples: 64.0, avg_ips: 1156.08863 images/sec.
-[Epoch 1, iter: 4790] top1: 0.08750, top5: 0.24531, lr: 0.01000, loss: 5.28853, avg_reader_cost: 0.05164 sec, avg_batch_cost: 0.06852 sec, avg_samples: 64.0, avg_ips: 934.08427 images/sec.
+[Epoch 59, iter: 900] lr: 0.00004, loss: -0.89112, avg_reader_cost: 0.00019 sec, avg_batch_cost: 0.16477 sec, avg_samples: 18.0, avg_ips: 109.24083 images/sec.
+[Epoch 59, iter: 1000] lr: 0.00004, loss: -0.88338, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16448 sec, avg_samples: 18.0, avg_ips: 109.43343 images/sec.
+[Epoch 60, iter: 100] lr: 0.00004, loss: -0.90081, avg_reader_cost: 0.00375 sec, avg_batch_cost: 0.16913 sec, avg_samples: 18.0, avg_ips: 106.42518 images/sec.
+[Epoch 60, iter: 200] lr: 0.00004, loss: -0.88204, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16512 sec, avg_samples: 18.0, avg_ips: 109.01377 images/sec.
+[Epoch 60, iter: 300] lr: 0.00004, loss: -0.85929, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16860 sec, avg_samples: 18.0, avg_ips: 106.76056 images/sec.
+[Epoch 60, iter: 400] lr: 0.00004, loss: -0.90331, avg_reader_cost: 0.00016 sec, avg_batch_cost: 0.16511 sec, avg_samples: 18.0, avg_ips: 109.02105 images/sec.
 ```
-
-* 单机多卡训练
-
-```bash
-export CUDA_VISIBLE_DEVICES=0,1,2,3
-python3.7 -m paddle.distributed.launch --gpus="0,1,2,3" train.py --data-path="./ILSVRC2012" --lr=0.01 --batch-size=64
-```
-
-更多配置参数可以参考[train.py](./train.py)的`get_args_parser`函数。
 
 ### 4.2 模型评估
 
-该项目中，训练与评估脚本相同，指定`--test-only`参数即可完成预测过程。
 
 ```bash
-python train.py --test-only --data-path=/paddle/data/ILSVRC2012 --pretrained=./alexnet_pretrained.pdparams
+python test.py --test-only --data-path=/paddle/data/ILSVRC2012 --pretrained=./alexnet_pretrained.pdparams
 ```
 
 期望输出如下。
@@ -185,7 +169,7 @@ Serving部署教程可参考：[链接](deploy/serving_python/README.md)。
 
 ```bash
 # 解压数据，如果您已经解压过，则无需再次运行该步骤
-tar -xf test_images/lite_data.tar
+unzip 
 ```
 
 * 运行测试命令
@@ -211,8 +195,6 @@ Run successfully with command - python3.7 deploy/py_inference/infer.py --use-gpu
 
 本项目的发布受[Apache 2.0 license](./LICENSE)许可认证。
 
-
 ## 8. 参考链接与文献
-
-1. Krizhevsky A, Sutskever I, Hinton G E. Imagenet classification with deep convolutional neural networks[J]. Advances in neural information processing systems, 2012, 25: 1097-1105.
-2. vision: https://github.com/pytorch/vision
+1.[Progressive Image Deraining Networks: A Better and Simpler Baseline](https://arxiv.org/pdf/1901.09221v3.pdf)
+2. MSSIM: https://github.com/AgentMaker/Paddle-MSSSIM

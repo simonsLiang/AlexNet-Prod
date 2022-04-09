@@ -84,6 +84,7 @@ pip install -r requirements.txt
 
 ```bash
 unzip RainTrainH.zip
+unzip Rain100H.zip                                                        
 ```
 
 ### 3.3 准备模型

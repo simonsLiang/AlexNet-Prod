@@ -30,23 +30,23 @@
     <img src="./images/alexnet_framework.png" width=800">
 </div>
 
-**论文:** [ImageNet Classification with Deep Convolutional Neural Networks](https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf)
+**论文:** [Progressive Image Deraining Networks: A Better and Simpler Baseline](https://arxiv.org/pdf/1901.09221v3.pdf)
 
-**参考repo:** [https://github.com/pytorch/vision](https://github.com/pytorch/vision)
+**参考repo:** [https://github.com/csdwren/PReNet](https://github.com/csdwren/PReNet)
 
 
-在此感谢[vision](https://github.com/pytorch/vision)，提高了AlexNet论文复现的效率。
+在此感谢[MSSIM](https://github.com/AgentMaker/Paddle-MSSSIM)，提高了AlexNet论文复现的效率。
 
 ## 2. 数据集和复现精度
 
-数据集为ImageNet，训练集包含1281167张图像，验证集包含50000张图像。
+验收标准：Rain100H数据集,PReNet模型,psnr=29.46, ssim=0.899
 
-您可以从[ImageNet 官网](https://image-net.org/)申请下载数据。
+复现精度：Rain100H数据集,PReNet模型,psnr=29.46, ssim=0.899
 
-
-| 模型      | top1/5 acc (参考精度) | top1/5 acc (复现精度) | 下载链接 |
-|:---------:|:------:|:----------:|:----------:|
-| AlexNet | 0.565/0.791   | 0.564/0.790   | [预训练模型](https://paddle-model-ecology.bj.bcebos.com/model/alexnet_reprod/alexnet_pretrained.pdparams) \|  [Inference模型](https://paddle-model-ecology.bj.bcebos.com/model/alexnet_reprod/alexnet_infer.tar) \| [日志](https://paddle-model-ecology.bj.bcebos.com/model/alexnet_reprod/alexnet_train.log) |
+| Epoch | 30     | 50     | 70      | 90    | 100    | 
+| ----- | ------ | ------ | ------ | ------ | ------ | 
+| psnr  | 82.44% | 82.87% | 82.93% | 83.12% | 83.29% | 
+| ssim  | 82.44% | 82.87% | 82.93% | 83.12% | 83.29% | 
 
 
 ## 3. 准备环境与数据

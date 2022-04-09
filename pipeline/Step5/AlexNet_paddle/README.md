@@ -207,5 +207,5 @@ Run successfully with command - python3.7 deploy/py_inference/infer.py --use-gpu
 
 ## 8. 参考链接与文献
 
-1. [https://github.com/csdwren/PReNet](https://github.com/csdwren/PReNet)
+1. [Progressive Image Deraining Networks: A Better and Simpler Baseline](https://arxiv.org/pdf/1901.09221v3.pdf)
 2. MSSIM: https://github.com/AgentMaker/Paddle-MSSSIM

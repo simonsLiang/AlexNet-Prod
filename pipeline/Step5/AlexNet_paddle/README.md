@@ -35,7 +35,7 @@
 **参考repo:** [https://github.com/csdwren/PReNet](https://github.com/csdwren/PReNet)
 
 
-在此感谢[MSSIM](https://github.com/AgentMaker/Paddle-MSSSIM)，提高了AlexNet论文复现的效率。
+在此感谢[MSSIM](https://github.com/AgentMaker/Paddle-MSSSIM)，提高了论文复现的效率。
 
 ## 2. 数据集和复现精度
 
@@ -56,8 +56,8 @@
 * 下载代码
 
 ```bash
-git clone https://github.com/littletomatodonkey/AlexNet-Prod.git
-cd AlexNet-Prod/pipeline/Step5/AlexNet_paddle
+git clone https://github.com/simonsLiang/PReNet_paddle.git
+cd PReNet_paddle
 ```
 
 * 安装paddlepaddle
@@ -80,12 +80,10 @@ pip install -r requirements.txt
 
 ### 3.2 准备数据
 
-如果您已经ImageNet1k数据集，那么该步骤可以跳过，如果您没有，则可以从[ImageNet官网](https://image-net.org/download.php)申请下载。
-
-如果只是希望快速体验模型训练功能，则可以直接解压`test_images/lite_data.tar`，其中包含16张训练图像以及16张验证图像。
+您可以从[BaiduYun](https://pan.baidu.com/s/1Oym9G-8Bq-0FU2BfbARf8g)申请下载RainTrainH.zip,Rain100H.zip
 
 ```bash
-tar -xf test_images/lite_data.tar
+unzip RainTrainH.zip
 ```
 
 ### 3.3 准备模型
@@ -101,31 +99,30 @@ tar -xf test_images/lite_data.tar
 
 ```bash
 export CUDA_VISIBLE_DEVICES=0
-python3.7 train.py --data-path=./ILSVRC2012 --lr=0.00125 --batch-size=32
+python train.py --data-path=./RainTrainH --lr=0.0001 --batch-size=18
 ```
 
 部分训练日志如下所示。
 
 ```
-[Epoch 1, iter: 4780] top1: 0.10312, top5: 0.27344, lr: 0.01000, loss: 5.34719, avg_reader_cost: 0.03644 sec, avg_batch_cost: 0.05536 sec, avg_samples: 64.0, avg_ips: 1156.08863 images/sec.
-[Epoch 1, iter: 4790] top1: 0.08750, top5: 0.24531, lr: 0.01000, loss: 5.28853, avg_reader_cost: 0.05164 sec, avg_batch_cost: 0.06852 sec, avg_samples: 64.0, avg_ips: 934.08427 images/sec.
+[Epoch 65, iter: 600] lr: 0.00004, loss: -0.90461, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16442 sec, avg_samples: 18.0, avg_ips: 109.47310 images/sec.
+[Epoch 65, iter: 700] lr: 0.00004, loss: -0.89737, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16499 sec, avg_samples: 18.0, avg_ips: 109.09891 images/sec.
+[Epoch 65, iter: 800] lr: 0.00004, loss: -0.90011, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16469 sec, avg_samples: 18.0, avg_ips: 109.29738 images/sec.
+[Epoch 65, iter: 900] lr: 0.00004, loss: -0.90944, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16455 sec, avg_samples: 18.0, avg_ips: 109.38969 images/sec.
+[Epoch 65, iter: 1000] lr: 0.00004, loss: -0.89040, avg_reader_cost: 0.00017 sec, avg_batch_cost: 0.16437 sec, avg_samples: 18.0, avg_ips: 109.50791 images/sec.
+[Epoch 66, iter: 100] lr: 0.00004, loss: -0.88260, avg_reader_cost: 0.00355 sec, avg_batch_cost: 0.16936 sec, avg_samples: 18.0, avg_ips: 106.28161 images/sec.
+[Epoch 66, iter: 200] lr: 0.00004, loss: -0.89613, avg_reader_cost: 0.00018 sec, avg_batch_cost: 0.16438 sec, avg_samples: 18.0, avg_ips: 109.50329 images/sec.
+[Epoch 66, iter: 300] lr: 0.00004, loss: -0.91299, avg_reader_cost: 0.00017 sec, avg_batch_cost: 0.16440 sec, avg_samples: 18.0, avg_ips: 109.49193 images/sec.
+[Epoch 66, iter: 400] lr: 0.00004, loss: -0.86077, avg_reader_cost: 0.00017 sec, avg_batch_cost: 0.16451 sec, avg_samples: 18.0, avg_ips: 109.41454 images/sec.
 ```
 
-* 单机多卡训练
-
-```bash
-export CUDA_VISIBLE_DEVICES=0,1,2,3
-python3.7 -m paddle.distributed.launch --gpus="0,1,2,3" train.py --data-path="./ILSVRC2012" --lr=0.01 --batch-size=64
-```
-
-更多配置参数可以参考[train.py](./train.py)的`get_args_parser`函数。
 
 ### 4.2 模型评估
 
 该项目中，训练与评估脚本相同，指定`--test-only`参数即可完成预测过程。
 
 ```bash
-python train.py --test-only --data-path=/paddle/data/ILSVRC2012 --pretrained=./alexnet_pretrained.pdparams
+python test.p --data-path=/paddle/data/ILSVRC2012 --pretrained=./alexnet_pretrained.pdparams
 ```
 
 期望输出如下。
@@ -209,5 +206,5 @@ Run successfully with command - python3.7 deploy/py_inference/infer.py --use-gpu
 
 ## 8. 参考链接与文献
 
-1. Krizhevsky A, Sutskever I, Hinton G E. Imagenet classification with deep convolutional neural networks[J]. Advances in neural information processing systems, 2012, 25: 1097-1105.
-2. vision: https://github.com/pytorch/vision
+1. [https://github.com/csdwren/PReNet](https://github.com/csdwren/PReNet)
+2. MSSIM: https://github.com/AgentMaker/Paddle-MSSSIM

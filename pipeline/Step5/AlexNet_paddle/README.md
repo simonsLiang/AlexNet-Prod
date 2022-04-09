@@ -1,4 +1,4 @@
-# AlexNet
+# Progressive Image Deraining Networks: A Better and Simpler Baseline
 
 ## 目录
 
@@ -23,12 +23,7 @@
 
 ## 1. 简介
 
-AlexNet是2012年ImageNet竞赛冠军获得者Hinton和他的学生Alex Krizhevsky设计的。主要创新点如下。
-
-* 首次引入ReLU激活函数：之前都是tanh和sigmoid激活函数，收敛慢且效果不好，用ReLU可以保证很多权重梯度不消失，且计算量更少，效果更好
-* 首次使用多个GPU并行训练：由于当时的GPU设备显存较小，AlexNet使用了两个GPU并行计算
-* 使用overlapping pooling：滑动窗口大于滑动步长，可以避免过拟合，进一步提升精度
-* 使用Dropout：该技术可以减少神经元之间的相互依赖性。因此，模型被强制学习更加稳健的特征
+该篇论文提出多阶段渐进的残差网络，每一个阶段都是resnet，每一res块的输入为上一res块输出和原始雨图，其中PReNet在残差块里引入了LSTM，进一步提升了网络的性能，网络总体简洁高效，在各种数据集上表现良好。
 
 
 <div align="center">

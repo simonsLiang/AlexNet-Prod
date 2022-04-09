@@ -1,4 +1,4 @@
-# Progressive Image Deraining Networks: A Better and Simpler Baseline
+# PReNet_paddle
 
 ## 目录
 
